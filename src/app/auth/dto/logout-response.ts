@@ -1,17 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { User } from 'src/app/user/entities/user.entity';
 
-@ObjectType()
-export class LoginUserResponse {
-  @Field(() => User)
-  user: User;
-
-  @Field()
-  authToken: string;
-}
-
-@ObjectType()
-class LogoutResponse {
-  @Field(() => String)
+@ObjectType({ description: 'The response object after a user logs out' })
+export class LogoutResponse {
+  @Field(() => String, { description: 'Success message after logout' })
   message: string;
 }

@@ -1,35 +1,108 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { IdeaService } from './idea.service';
-import { Idea } from './entities/idea.entity';
+import { Idea, GetIdeasPaginatedResponse } from './entities/idea.entity';
 import { CreateIdeaInput } from './dto/create-idea.input';
 import { UpdateIdeaInput } from './dto/update-idea.input';
+import { GetPaginatedArgs } from '../common/dto/get-paginated.args';
+import { GetPaginatedSubDocumentsArgs } from '../common/dto/get-paginated-sub-document.args';
+import { Schema as MongooSchema } from 'mongoose';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UserContext } from '../auth/dto/user-context';
+import { RolesEnum } from '../user/entities/roles.enum';
 
+/**
+ * Resolver for Idea GraphQL requests
+ */
 @Resolver(() => Idea)
 export class IdeaResolver {
   constructor(private readonly ideaService: IdeaService) {}
 
-  @Mutation(() => Idea)
-  createIdea(@Args('createIdeaInput') createIdeaInput: CreateIdeaInput) {
-    return this.ideaService.create(createIdeaInput);
+  private getUserAndRole(context: any) {
+    const user: UserContext = context.req.user;
+    const isAdmin = user.role === RolesEnum.ADMIN;
+
+    return { user, isAdmin };
   }
 
-  @Query(() => [Idea], { name: 'idea' })
-  findAll() {
-    return this.ideaService.findAll();
+  /**
+   * Mutation to create an idea
+   */
+  @Mutation(() => Idea, { description: 'Create an Idea.' })
+  @UseGuards(JwtAuthGuard)
+  createIdea(
+    @Args('createIdeaInput') createIdeaInput: CreateIdeaInput,
+    @Context() context: any,
+  ) {
+    const user: UserContext = context.req.user;
+    return this.ideaService.createIdea(createIdeaInput, user.userId);
   }
 
-  @Query(() => Idea, { name: 'idea' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.ideaService.findOne(id);
+  /**
+   * Query to get all ideas
+   */
+  @Query(() => GetIdeasPaginatedResponse, {
+    name: 'ideas',
+    description: 'Fetch all ideas.',
+  })
+  @UseGuards(JwtAuthGuard)
+  findAllIdeas(@Args() args: GetPaginatedArgs, @Context() context: any) {
+    const { user, isAdmin } = this.getUserAndRole(context);
+
+    return this.ideaService.findAllIdeas(
+      user.userId,
+      args.limit,
+      args.skip,
+      isAdmin,
+    );
   }
 
-  @Mutation(() => Idea)
-  updateIdea(@Args('updateIdeaInput') updateIdeaInput: UpdateIdeaInput) {
-    return this.ideaService.update(updateIdeaInput.id, updateIdeaInput);
+  /**
+   * Query to get an idea by ID
+   */
+  @Query(() => Idea, {
+    name: 'idea',
+    description: 'Fetch an Idea by its ID.',
+  })
+  @UseGuards(JwtAuthGuard)
+  findOne(@Args() args: GetPaginatedSubDocumentsArgs, @Context() context: any) {
+    const { user, isAdmin } = this.getUserAndRole(context);
+    return this.ideaService.getIdeaById(args._id, user.userId, isAdmin);
   }
 
-  @Mutation(() => Idea)
-  removeIdea(@Args('id', { type: () => Int }) id: number) {
-    return this.ideaService.remove(id);
+  /**
+   * Mutation to update an idea by its ID
+   */
+  @Mutation(() => Idea, {
+    description: 'Update an Idea by its ID.',
+  })
+  @UseGuards(JwtAuthGuard)
+  async updateIdea(
+    @Args('updateIdeaInput') updateIdeaInput: UpdateIdeaInput,
+    @Context() context: any,
+  ) {
+    const { user, isAdmin } = this.getUserAndRole(context);
+
+    return await this.ideaService.updateIdea(
+      updateIdeaInput._id,
+      updateIdeaInput,
+      user.userId,
+      isAdmin,
+    );
+  }
+
+  /**
+   * Mutation to delete an idea by its ID
+   */
+  @Mutation(() => String, {
+    description: 'Delete an Idea by its ID.',
+  })
+  @UseGuards(JwtAuthGuard)
+  async removeIdea(
+    @Args('id', { type: () => String }) id: MongooSchema.Types.ObjectId,
+    @Context() context: any,
+  ) {
+    const { user, isAdmin } = this.getUserAndRole(context);
+    return await this.ideaService.removeIdea(id, user.userId, isAdmin);
   }
 }
