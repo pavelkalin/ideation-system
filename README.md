@@ -8,10 +8,9 @@ This is a backend ideation system where users can submit ideas and read them. Th
 ## Brief overview
 
 The application is structured as a single service, where each model is organized into its own dedicated folder, following a modular architecture.
-
-#### Authentication:
 User authentication is implemented using JWT tokens.
 The Passport library is used to handle the authentication process.
+
 Guards are applied to API endpoints that require authentication, ensuring secure access to protected resources.
 GraphQL Support:
 The service exposes the following GraphQL endpoints:
