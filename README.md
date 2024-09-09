@@ -1,15 +1,35 @@
+
+
+
 ## Description
 
 This is a backend ideation system where users can submit ideas and read them. The core stack is built with Node.js, TypeScript, NestJS, and MongoDB. The API is implemented using GraphQL.
 
 ## Brief overview
 
-Application is in one service, where each model is placed into it's own folder.
-User authentication is done via JWT tokens using Passport library.
-We use guards for API that should be authenticated.
-We support GraphQL endpoints for:
-* User authentication (sign up, log in, logout).
-* Idea CRUD operations (create, read, update, delete).
+The application is structured as a single service, where each model is organized into its own dedicated folder, following a modular architecture.
+
+#### Authentication:
+User authentication is implemented using JWT tokens.
+The Passport library is used to handle the authentication process.
+Guards are applied to API endpoints that require authentication, ensuring secure access to protected resources.
+GraphQL Support:
+The service exposes the following GraphQL endpoints:
+
+#### User Authentication:
+
+* Sign Up: Allows new users to register.
+* Log In: Issues a JWT token upon successful authentication.
+* Log Out: Invalidates the user session.
+
+#### Idea Management (CRUD Operations):
+
+* Create: Allows users to create new ideas.
+* Read: Retrieves details about existing ideas.
+* Update: Enables users to modify their own ideas.
+* Delete: Removes an idea from the system.
+
+This architecture ensures a clear separation of concerns, with authentication being handled securely via JWT, and CRUD operations exposed through GraphQL for efficient and flexible API interactions.
 
 ## Running the app
 
@@ -33,6 +53,14 @@ To test locally run mongo
 ```bash
 # create .env file from .env.example
 $ cp .env.example .env
+
+# uncomment env variables from .env
+$ chmod +x remove_hashes.sh
+$ ./remove_hashes.sh .env 
+
+# install dependencies
+$ npm ci
+
 # run mongo
 $ docker-compose up mongo
 ```
@@ -52,11 +80,15 @@ $ npm run test:cov
 # start service
 $ docker-compose up mongo
 
-# if .env file is not created => create it
+# create .env file from .env.example
 $ cp .env.example .env
 
+# uncomment env variables from .env
+$ chmod +x remove_hashes.sh
+$ ./remove_hashes.sh .env 
+
 # install dependencies
-$ npm i
+$ npm ci
 
 # run app in dev mode 
 $ npm run start:dev
