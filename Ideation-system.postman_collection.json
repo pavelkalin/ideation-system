@@ -1,0 +1,463 @@
+{
+	"info": {
+		"_postman_id": "32ee7580-c475-44ab-8515-1f56d0fccc07",
+		"name": "Ideation-system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11485332"
+	},
+	"item": [
+		{
+			"name": "User roles and Authentication",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  signup(signupInput: { \r\n    username: \"newusername\", \r\n    password: \"strong!31pRssword\"\r\n  }) {\r\n    _id\r\n    username\r\n    role\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "admin signup",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\r\n  signup(signupInput: { \r\n    username: \"admin1\", \r\n    password: \"Admin@123\",\r\n    role: ADMIN\r\n  }) {\r\n    _id\r\n    username\r\n    role\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "another user signup",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\r\n  signup(signupInput: { \r\n    username: \"user1\", \r\n    password: \"Admin@123\",\r\n    role: ADMIN\r\n  }) {\r\n    _id\r\n    username\r\n    role\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "user login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the GraphQL response\r",
+									"let responseData = pm.response.json();\r",
+									"\r",
+									"// Extract the token and user ID\r",
+									"let token = responseData.data.login.token;\r",
+									"\r",
+									"// Set them as environment variables\r",
+									"pm.collectionVariables.set(\"authToken\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  login(loginUserInput: { username: \"newusername\", password: \"strong!31pRssword\" }) {\r\n    token\r\n    user {\r\n      _id\r\n      username\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "admin login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\r\n  login(loginUserInput: { username: \"admin1\", password: \"Admin@123\" }) {\r\n    token\r\n    user {\r\n      _id\r\n      username\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "another user login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\r\n  login(loginUserInput: { username: \"user2\", password: \"strong!31pRssword\" }) {\r\n    token\r\n    user {\r\n      _id\r\n      username\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Idea Submission and Management",
+			"item": [
+				{
+					"name": "Create idea without authorization",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  createIdea(createIdeaInput: {\r\n    title: \"My Idea 2\",\r\n    description: \"This is my great idea\"\r\n  }) {\r\n    _id\r\n    title\r\n    description\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create idea",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the GraphQL response\r",
+									"let responseData = pm.response.json();\r",
+									"\r",
+									"// Extract the token and user ID\r",
+									"let ideaId = responseData.data.createIdea._id;\r",
+									"\r",
+									"// Set them as environment variables\r",
+									"pm.collectionVariables.set(\"lastIdeaId\", ideaId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  createIdea(createIdeaInput: {\r\n    title: \"My Idea 2\",\r\n    description: \"This is my great idea\"\r\n  }) {\r\n    _id\r\n    title\r\n    description\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Idea",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\r\n  idea(_id: \"{{lastIdeaId}}\") {\r\n     _id\r\n      title\r\n      description\r\n      user {\r\n        username\r\n      }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get ideas",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\r\n  ideas(limit: 10, skip: 0) {\r\n    message\r\n    ideasCount\r\n    ideas {\r\n      _id\r\n      title\r\n      description\r\n      user {\r\n        username\r\n      }\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update idea",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  updateIdea(updateIdeaInput: {\r\n    _id: \"{{lastIdeaId}}\"\r\n    title: \"Updated title 22\"\r\n  }) {\r\n    _id\r\n    title\r\n    description\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove idea",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\r\n  removeIdea(id: \"{{lastIdeaId}}\") \r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{authToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "authToken",
+			"value": "123",
+			"type": "string"
+		},
+		{
+			"key": "lastIdeaId",
+			"value": "123",
+			"type": "string"
+		}
+	]
+}
