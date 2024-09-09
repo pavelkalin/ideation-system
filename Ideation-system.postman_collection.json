@@ -207,6 +207,125 @@
 							"body": null
 						}
 					]
+				},
+				{
+					"name": "user logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the GraphQL response\r",
+									"let responseData = pm.response.json();\r",
+									"\r",
+									"// Extract the token and user ID\r",
+									"let token = responseData.data.login.token;\r",
+									"\r",
+									"// Set them as environment variables\r",
+									"pm.collectionVariables.set(\"authToken\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\r\n  logout{\r\n    message\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "admin login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\r\n  login(loginUserInput: { username: \"admin1\", password: \"Admin@123\" }) {\r\n    token\r\n    user {\r\n      _id\r\n      username\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "another user login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\r\n  login(loginUserInput: { username: \"user2\", password: \"strong!31pRssword\" }) {\r\n    token\r\n    user {\r\n      _id\r\n      username\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/graphql",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		},

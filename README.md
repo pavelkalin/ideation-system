@@ -41,7 +41,8 @@ $ docker-compose up --build
 $ docker-compose down
 ```
 
-GraphQL Playground is available by http://localhost:3000/graphql
+GraphQL Playground is available by [http://localhost:3000/graphql](http://localhost:3000/graphql)
+
 Postman collection is available in source code [Ideation-system.postman_collection.json](Ideation-system.postman_collection.json)
 or via link - https://api.postman.com/collections/11485332-32ee7580-c475-44ab-8515-1f56d0fccc07?access_key=PMAT-01J7C20ZED9BB6F5HFFXPVQ6AC
 
